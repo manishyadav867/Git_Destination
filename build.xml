@@ -1,0 +1,21 @@
+<project name="Sample usage of Salesforce Ant tasks" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <property file="build.properties"/>
+    <property environment="env"/>
+                
+    <target name="rp">
+      <mkdir dir="retrieveUnpackaged"/>
+      <sf:retrieve username="${sf.usernameRet}" password="${sf.passwordRet}" serverurl="${sf.serverurl}" retrieveTarget="retrieveUnpackaged" unpackaged="package.xml" maxPoll="100000"/>
+    </target>
+
+    <!-- Deploy the unpackaged set of metadata retrieved with retrieveUnpackaged -->
+    <target name="dp">
+      <sf:deploy username="${sf.usernameTarget}" password="${sf.passwordTarget}" serverurl="${sf.serverurl}" deployRoot="retrieveUnpackaged" checkOnly="false"  rollbackOnError="true"  runAllTests="false" pollWaitMillis="1000000" maxPoll="10000"/>
+    </target>
+                
+                <!-- Validate the unpackaged set of metadata retrieved with retrieveUnpackaged -->
+    <target name="vp">
+      <sf:deploy username="${sf.usernameVp}" password="${sf.passwordVP}" serverurl="${sf.serverurl}" deployRoot="retrieveUnpackaged" checkOnly="true"  rollbackOnError="true" pollWaitMillis="1000000" maxPoll="1000" runAllTests="false" />
+                </target>
+    
+</project>
